@@ -1,20 +1,6 @@
 "use strict";
 
-function saveArrayBufferAsFile(arrayBuffer, fileName, mimeType) {
-	const blob = new Blob([arrayBuffer], { type: mimeType });
-	const url = URL.createObjectURL(blob);
-	const a = document.createElement('a');
-	a.href = url;
-	a.download = fileName;
-	document.body.appendChild(a);
-	a.click();
-	document.body.removeChild(a);
-	URL.revokeObjectURL(url);
-}
-
-async function saveState() {
-	saveArrayBufferAsFile(await emulator.save_state(), "savestate.bin", "text/plain")
-}
+let savestate_filename;
 
 function startEmulator(diskPath, savestate) {
 	const loadingOverlay = document.getElementById("loading_overlay");
@@ -46,7 +32,7 @@ function startEmulator(diskPath, savestate) {
 	});
 
 	emulator.add_listener("download-progress", function (event) {
-		if (event.file_name.includes("4_zf0e386b7a1df37119e870a10_f1090cce9eff9d94b_d20250722_m114357_c003_v0312029_t0053_u01753184637701")) {
+		if (event.file_name === savestate_filename) {
 			const progress = (event.loaded / event.total) * 100;
 			const loadedMB = (event.loaded / 1024 / 1024).toFixed(1);
 			const totalMB = (event.total / 1024 / 1024).toFixed(1);
@@ -77,17 +63,25 @@ function startEmulatorButton() {
 		return;
 	}
 
-	if (!path.value.startsWith("https://")) {
+	if (!path.value.startsWith("http")) {
 		alert("Disk image path is invalid!");
 		return;
 	}
 
-	if (!savestate_input.value.startsWith("https://")) {
+	if (!savestate_input.value.startsWith("http")) {
 		alert("Savestate path is invalid!");
 		return;
 	}
 
 	document.getElementById("legal_disclaimer").remove();
 
-	startEmulator(path.value, savestate_input.value);
+	document.getElementById("boot_anim").src = "https://peymanx.github.io/boot/images/win7.gif";
+
+	savestate_filename = savestate_input.value;
+
+	startEmulator(path.value, savestate_filename);
 }
+
+$(".window").draggable({
+	handle: ".title-bar"
+});

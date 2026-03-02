@@ -1,9 +1,14 @@
 <!doctype html>
 <html>
+
 	<head>
 		<title>Browser7</title>
 		<script src="libv86.js"></script>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+		<script src="http://unpkg.com/jquery-ui"></script>
 		<script src="main.js" defer></script>
+		<link rel="stylesheet" href="https://unpkg.com/7.css">
 		<link rel="stylesheet" href="styles.css">
 		<meta property="og:title" content="Browser7">
 		<meta property="og:description" content="Windows 7 emulator in your browser using v86.">
@@ -13,8 +18,18 @@
 		<div id="watermark">browser7.win</div>
 
 		<div id="legal_disclaimer">
-			<h1>Legal Notice & Terms of Use</h1>
-			<textarea readonly rows="15">This project is a technology demonstration of the v86 emulator and is provided for educational and research purposes only. Use of this service constitutes your full acceptance of the following terms.
+			<div class="window glass active">
+				<div class="title-bar">
+					<div class="title-bar-text">Legal Notice & Terms of Use</div>
+					<div class="title-bar-controls">
+						<button aria-label="Minimize"></button>
+						<button aria-label="Maximize"></button>
+						<button aria-label="Close"></button>
+					</div>
+				</div>
+				<div class="window-body has-space">
+					<h1>Legal Notice & Terms of Use</h1>
+					<textarea readonly class="has-scrollbar" rows="8">This project is a technology demonstration of the v86 (https://github.com/copy/v86) emulator and is provided for educational and research purposes only. Use of this service constitutes your full acceptance of the following terms.
 
 1. No Distribution of Copyrighted Software
 This project DOES NOT DISTRIBUTE, BUNDLE, OR PROVIDE any Microsoft Windows operating system images, files, or product keys. The emulator is provided as an empty virtual machine. To use this service, you, the user, must provide your own legally obtained operating system disk image and a valid license. You are solely responsible for ensuring you have the legal right to use the software you load into this emulator. We do not facilitate the acquisition of copyrighted materials in any way.
@@ -28,33 +43,43 @@ By loading an operating system into this emulator, you affirm that you own a leg
 4. Limitation of Liability & No Warranty
 This service is provided "AS IS," without warranty of any kind. In no event shall the project creators be liable for any claims, damages, or liabilities, including but not limited to copyright infringement claims initiated against you, data loss, or security breaches arising from your use of this service.</textarea>
 
-			<div>
-				<input type="checkbox" id="agree1_checkbox">
-				<label for="agree1_checkbox">I have read, understood, and agree to the Legal Notice and Terms of Use.</label>
-				<br>
-				<br>
+					<div>
+						<input type="checkbox" id="agree1_checkbox">
+						<label for="agree1_checkbox">I have read, understood, and agree to the Legal Notice and Terms of
+							Use.</label>
+						<br>
+						<br>
 
-				<input type="checkbox" id="agree2_checkbox">
-				<label for="agree2_checkbox">I affirm that I own a legitimate license for the software I will load.</label>
-				<br>
-				<br>
+						<input type="checkbox" id="agree2_checkbox">
+						<label for="agree2_checkbox">I affirm that I own a legitimate license for the software I will
+							load.</label>
+						<br>
+						<br>
 
-				<span>Path to your legally owned OS disk image: </span>
-				<input id="disk_image_input" value="https://f003.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=4_zf0e386b7a1df37119e870a10_f2050208dd46a3b88_d20250722_m103240_c003_v0312024_t0057_u01753180360888">
-				<br>
-				<br>
+						<div>
+							<span>Path to your legally owned OS disk image: </span>
+							<input type="text" id="disk_image_input" value="https://f003.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=4_zf0e386b7a1df37119e870a10_f2050208dd46a3b88_d20250722_m103240_c003_v0312024_t0057_u01753180360888">
+							<br>
+							<br>
 
-				<span>Path to the savestate of the corresponding OS: </span>
-				<input id="savestate_input" value="https://f003.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=4_zf0e386b7a1df37119e870a10_f1090cce9eff9d94b_d20250722_m114357_c003_v0312029_t0053_u01753184637701">
-				<br>
-				<br>
+							<span>Path to the savestate of the corresponding OS: </span>
+							<input type="text" id="savestate_input" value="https://f003.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=4_zf0e386b7a1df37119e870a10_f1090cce9eff9d94b_d20250722_m114357_c003_v0312029_t0053_u01753184637701">
+							<br>
+							<br>
+						</div>
+
+					</div>
+
+
+					<button id="agree_disclaimer_button" onclick="startEmulatorButton()">Acknowledge and Proceed</button>
+
+				</div>
 			</div>
-
-			<button id="agree_disclaimer_button" onclick="startEmulatorButton()">Acknowledge and Proceed</button>
 		</div>
 
 		<div id="loading_overlay">
-			<div id="loading_status">Initializing...</div>
+			<img id="boot_anim" width="300px">
+			<span id="loading_status">Initializing...</span>
 			<progress id="loading_progress" value="0" max="100"></progress>
 		</div>
 
@@ -63,4 +88,5 @@ This service is provided "AS IS," without warranty of any kind. In no event shal
 			<canvas style="display: none" onclick="emulator.lock_mouse()"></canvas>
 		</div>
 	</body>
+
 </html>

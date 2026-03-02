@@ -1,6 +1,6 @@
 body {
 	margin: 0;
-	background: #0c4887;
+	background: #3b9ad8;
 }
 
 #screen_container canvas {
@@ -41,6 +41,11 @@ body {
 	font-family: sans-serif;
 }
 
+#starting_windows {
+	font-size: 20px;
+	font-weight: 400;
+}
+
 #loading_status {
 	margin-bottom: 10px;
 	font-size: 16px;
@@ -53,8 +58,11 @@ body {
 
 #legal_disclaimer {
 	font-family: sans-serif;
-	color: white;
-	background: black;
+	color: black;
+	background-color: #3b9ad8;
+	background: url(wallpaper.avif);
+	background-size: cover;
+	background-position: center;
 	position: fixed;
 	top: 0;
 	bottom: 0;
@@ -67,7 +75,7 @@ body {
 	justify-content: center;
 }
 
-#legal_disclaimer>textarea {
+#legal_disclaimer textarea {
 	width: 100%;
 	max-width: 500px;
 	resize: none;
@@ -76,16 +84,14 @@ body {
 	font-size: 12px;
 }
 
+#legal_disclaimer input[type="text"] {
+	width: 100px;
+}
+
 textarea:focus {
 	outline: none;
 }
 
-#agree_disclaimer_button {
-	background: green;
-	color: white;
-	margin-top: 5px;
-	padding: 7px 10px;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
+.window {
+	user-select: none;
 }
