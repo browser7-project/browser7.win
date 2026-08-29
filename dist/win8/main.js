@@ -29,10 +29,11 @@ function startEmulator(diskPath, savestate) {
 			url: savestate,
 			size: 120671996
 		},
+		network_relay_url: "wss://relay.widgetry.org/",
 		net_device: {
-			type: "ne2k",
-			relay_url: "wss://relay.widgetry.org"
-		}
+			type: "ne2k"
+		},
+		preserve_mac_from_state_image: true
 	});
 
 	emulator.add_listener("download-progress", function (event) {
