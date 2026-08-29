@@ -2,91 +2,90 @@
 <html lang="en">
 
 	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Browser7 - Windows 7 in Your Browser</title>
 		<script src="/build/v86_2025-02-15/libv86.js"></script>
-		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-		<script src="http://unpkg.com/jquery-ui"></script>
-		<script src="main.js" defer></script>
-		<link rel="stylesheet" href="https://unpkg.com/7.css">
-		<link rel="stylesheet" href="styles.css">
+		<script src="/emulator.js" defer></script>
+		<link rel="stylesheet" href="/styles.css">
+		<link rel="stylesheet" href="/emulator.css">
 		<meta property="og:title" content="Browser7 - Windows 7 in Your Browser">
 		<meta property="og:description" content="Windows 7 PC emulator in your browser.">
-		<meta property="og:image" content="https://browser7.win/screenshots/win7.png" />
+		<meta property="og:image" content="https://browser7.win/screenshots/win7.png">
 	</head>
 
 	<body>
 		<div id="watermark">browser7.win</div>
 
-		<div id="legal_disclaimer">
-			<div class="window glass active">
-				<div class="title-bar">
-					<div class="title-bar-text">Legal Notice & Terms of Use</div>
-					<div class="title-bar-controls">
-						<button aria-label="Close" onclick="location='/'"></button>
+		<!-- Metro License Terms Screen -->
+		<div id="license_screen" style="display: none;">
+			<div class="license-content">
+				<h1 class="license-title">License terms</h1>
+				<p class="license-subtitle">Please read this so you know what you're agreeing to.</p>
+
+				<div class="license-body">
+					<h3>LEGAL NOTICE & TERMS OF USE</h3>
+					<p>This project is a technology demonstration of the v86 emulator and is provided for educational and research purposes only. Use of this service constitutes your full acceptance of the following terms.</p>
+
+					<h4>1. NO DISTRIBUTION OF COPYRIGHTED SOFTWARE</h4>
+					<p>This project DOES NOT DISTRIBUTE, BUNDLE, OR PROVIDE any Microsoft Windows operating system images, files, or product keys. The emulator is provided as an empty virtual machine. To use this service, you, the user, must provide your own legally obtained operating system disk image and a valid license. You are solely responsible for ensuring you have the legal right to use the software you load into this emulator. We do not facilitate the acquisition of copyrighted materials in any way.</p>
+
+					<h4>2. TRADEMARK DISCLAIMER</h4>
+					<p>Microsoft®, Windows®, and the Windows logo are registered trademarks of Microsoft Corporation. This project is not affiliated with, endorsed by, or sponsored by Microsoft Corporation. All trademarks are used for identification and descriptive purposes only under the principle of nominative fair use. This project makes no claim of ownership to these trademarks.</p>
+
+					<h4>3. USER RESPONSIBILITY AND EULA COMPLIANCE</h4>
+					<p>By loading an operating system into this emulator, you affirm that you own a legitimate license for that software and agree to abide by all its terms, including the applicable Microsoft Software License Terms or End-User License Agreement (EULA). You assume all risks associated with its use. Do not enter or use any sensitive personal, financial, or confidential information within the emulated environment.</p>
+
+					<h4>4. LIMITATION OF LIABILITY & NO WARRANTY</h4>
+					<p>This service is provided "AS IS," without warranty of any kind. In no event shall the project creators be liable for any claims, damages, or liabilities, including but not limited to copyright infringement claims initiated against you, data loss, or security breaches arising from your use of this service.</p>
+				</div>
+
+				<div class="license-inputs">
+					<div class="license-input-group">
+						<label for="disk_image_input">Path to your legally owned OS disk image:</label>
+						<input type="text" id="disk_image_input">
+					</div>
+					<div class="license-input-group">
+						<label for="savestate_input">Path to the savestate of the corresponding OS:</label>
+						<input type="text" id="savestate_input">
 					</div>
 				</div>
-				<div class="window-body has-space">
-					<h1>Legal Notice & Terms of Use</h1>
-					<textarea readonly class="has-scrollbar" rows="8">This project is a technology demonstration of the v86 (https://github.com/copy/v86) emulator and is provided for educational and research purposes only. Use of this service constitutes your full acceptance of the following terms.
+			</div>
 
-1. No Distribution of Copyrighted Software
-This project DOES NOT DISTRIBUTE, BUNDLE, OR PROVIDE any Microsoft Windows operating system images, files, or product keys. The emulator is provided as an empty virtual machine. To use this service, you, the user, must provide your own legally obtained operating system disk image and a valid license. You are solely responsible for ensuring you have the legal right to use the software you load into this emulator. We do not facilitate the acquisition of copyrighted materials in any way.
-
-2. Trademark Disclaimer
-Microsoft®, Windows®, and the Windows logo are registered trademarks of Microsoft Corporation. This project is not affiliated with, endorsed by, or sponsored by Microsoft Corporation. All trademarks are used for identification and descriptive purposes only under the principle of nominative fair use. This project makes no claim of ownership to these trademarks.
-
-3. User Responsibility and EULA Compliance
-By loading an operating system into this emulator, you affirm that you own a legitimate license for that software and agree to abide by all its terms, including the applicable Microsoft Software License Terms or End-User License Agreement (EULA). You assume all risks associated with its use. Do not enter or use any sensitive personal, financial, or confidential information within the emulated environment.
-
-4. Limitation of Liability & No Warranty
-This service is provided "AS IS," without warranty of any kind. In no event shall the project creators be liable for any claims, damages, or liabilities, including but not limited to copyright infringement claims initiated against you, data loss, or security breaches arising from your use of this service.</textarea>
-
-					<div>
-						<input type="checkbox" id="agree1_checkbox">
-						<label for="agree1_checkbox">I have read, understood, and agree to the Legal Notice and Terms of
-							Use.</label>
-						<br>
-						<br>
-
-						<input type="checkbox" id="agree2_checkbox">
-						<label for="agree2_checkbox">I affirm that I own a legitimate license for the software I will
-							load.</label>
-						<br>
-						<br>
-
-						<div>
-							<span>Path to your legally owned OS disk image: </span>
-							<input type="text" id="disk_image_input" value="https://f003.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=4_zf0e386b7a1df37119e870a10_f2050208dd46a3b88_d20250722_m103240_c003_v0312024_t0057_u01753180360888">
-							<br>
-							<br>
-
-							<span>Path to the savestate of the corresponding OS: </span>
-							<input type="text" id="savestate_input" value="https://f003.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=4_zf0e386b7a1df37119e870a10_f1090cce9eff9d94b_d20250722_m114357_c003_v0312029_t0053_u01753184637701">
-							<br>
-							<br>
-						</div>
-
-					</div>
-
-
-					<button id="agree_disclaimer_button" onclick="startEmulatorButton()">Acknowledge and Proceed</button>
-					<a href="/win8">New! Run Windows 8 in your browser</a>
-
-				</div>
+			<div class="license-footer">
+				<label class="license-checkbox-container">
+					<input type="checkbox" id="agree_checkbox">
+					<span>I accept the license terms</span>
+				</label>
+				<button id="accept_button" class="metro-btn-accept" disabled>Accept</button>
 			</div>
 		</div>
 
 		<div id="loading_overlay">
-			<img id="boot_anim" width="300px">
+			<img id="boot_anim" width="300px" style="display: none;" alt="Starting Windows">
 			<span id="loading_status">Initializing...</span>
 			<progress id="loading_progress" value="0" max="100"></progress>
 		</div>
 
 		<div id="screen_container">
 			<div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
-			<canvas style="display: none" onclick="emulator.lock_mouse()"></canvas>
+			<canvas style="display: none" onclick="window.emulator && window.emulator.lock_mouse()"></canvas>
 		</div>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+				initEmulator({
+					wasmPath: "/build/v86_2025-02-15/v86.wasm",
+					memorySize: 256 * 1024 * 1024,
+					vgaMemorySize: 32 * 1024 * 1024,
+					hdaUrl: "https://f003.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=4_zf0e386b7a1df37119e870a10_f2050208dd46a3b88_d20250722_m103240_c003_v0312024_t0057_u01753180360888",
+					hdaSize: 3865051136,
+					stateUrl: "https://f003.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=4_zf0e386b7a1df37119e870a10_f1090cce9eff9d94b_d20250722_m114357_c003_v0312029_t0053_u01753184637701",
+					stateSize: 64520648,
+					bootAnim: "https://peymanx.github.io/boot/images/win7.gif"
+				});
+			});
+		</script>
 	</body>
 
 </html>

@@ -1,0 +1,263 @@
+body {
+	margin: 0;
+	padding: 0;
+	background: #000;
+	color: #ffffff;
+	font-family: SegoeUI, "Segoe UI Light", "Segoe UI", Tahoma, sans-serif;
+	overflow: hidden;
+	height: 100vh;
+	width: 100vw;
+}
+
+#screen_container {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#screen_container canvas {
+	height: 100vh !important;
+	width: auto !important;
+	margin: 0 auto;
+}
+
+#watermark {
+	color: white;
+	font-family: SegoeUI, sans-serif;
+	font-size: 22px;
+	font-weight: 200;
+	z-index: 9999;
+	position: fixed;
+	top: 10px;
+	left: 0;
+	right: 0;
+	text-align: center;
+	opacity: 0.4;
+	pointer-events: none;
+	user-select: none;
+	text-shadow: 1px 1px 2px black;
+}
+
+/* Loading Overlay */
+#loading_overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #000000;
+	z-index: 100;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	color: white;
+}
+
+#boot_anim {
+	margin-bottom: 20px;
+}
+
+#loading_status {
+	margin-bottom: 12px;
+	font-size: 15px;
+	font-weight: 200;
+}
+
+#loading_progress {
+	width: 50%;
+	max-width: 380px;
+	height: 6px;
+	accent-color: #007a99;
+}
+
+/* Metro "License terms" Screen Overlay */
+#license_screen {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: #19054d;
+	z-index: 200;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	padding: 48px 80px 40px 80px;
+	box-sizing: border-box;
+	overflow-y: auto;
+}
+
+.license-content {
+	width: 100%;
+	max-width: 900px;
+	display: flex;
+	flex-direction: column;
+}
+
+.license-title {
+	font-size: 3.2rem;
+	font-weight: 100;
+	letter-spacing: -0.5px;
+	margin-bottom: 20px;
+	color: #ffffff;
+}
+
+.license-subtitle {
+	font-size: 0.95rem;
+	font-weight: 400;
+	margin-bottom: 16px;
+	color: #ffffff;
+}
+
+.license-body {
+	height: 38vh;
+	min-height: 160px;
+	overflow-y: auto;
+	padding-right: 18px;
+	font-size: 0.82rem;
+	line-height: 1.45;
+	font-weight: 400;
+	color: #ffffff;
+}
+
+.license-body h3 {
+	font-size: 0.85rem;
+	font-weight: 700;
+	margin-top: 14px;
+	margin-bottom: 4px;
+}
+
+.license-body h4 {
+	font-size: 0.85rem;
+	font-weight: 700;
+	margin-top: 10px;
+	margin-bottom: 2px;
+}
+
+.license-body p {
+	margin-bottom: 10px;
+}
+
+/* Metro Scrollbar */
+.license-body::-webkit-scrollbar {
+	width: 6px;
+}
+
+.license-body::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.license-body::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.35);
+}
+
+/* Custom Test Input Fields */
+.license-inputs {
+	margin-top: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.license-input-group {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	font-size: 0.8rem;
+	color: #c5b8e6;
+}
+
+.license-input-group input[type="text"] {
+	background: rgba(0, 0, 0, 0.35);
+	border: 2px solid rgba(255, 255, 255, 0.35);
+	color: #ffffff;
+	padding: 5px 8px;
+	font-family: SegoeUI, sans-serif;
+	font-size: 0.82rem;
+	outline: none;
+	width: 100%;
+	max-width: 450px;
+}
+
+.license-input-group input[type="text"]:focus {
+	border-color: #00bcf2;
+}
+
+/* Footer Section */
+.license-footer {
+	width: 100%;
+	max-width: 900px;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	margin-top: 24px;
+	padding-top: 10px;
+}
+
+.license-checkbox-container {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	user-select: none;
+	font-size: 0.95rem;
+	font-weight: 400;
+	color: #ffffff;
+	gap: 10px;
+}
+
+.license-checkbox-container input {
+	width: 18px;
+	height: 18px;
+	accent-color: #007a99;
+	cursor: pointer;
+}
+
+.metro-btn-accept {
+	background-color: #007a99;
+	border: 2px solid #ffffff;
+	color: #ffffff;
+	padding: 6px 36px;
+	font-size: 0.95rem;
+	font-family: SegoeUI, sans-serif;
+	font-weight: 400;
+	cursor: pointer;
+	outline: none;
+	transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.metro-btn-accept:hover:not(:disabled) {
+	background-color: #0099b8;
+}
+
+.metro-btn-accept:active:not(:disabled) {
+	background-color: #006b85;
+}
+
+.metro-btn-accept:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+	#license_screen {
+		padding: 24px 20px;
+	}
+
+	.license-title {
+		font-size: 2.2rem;
+	}
+
+	.license-footer {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 16px;
+	}
+
+	.metro-btn-accept {
+		align-self: flex-end;
+	}
+}
