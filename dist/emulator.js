@@ -338,7 +338,7 @@ function createVMUI(emulator) {
 
 	addBtn("fa-solid fa-keyboard", "Ctrl+Alt+Del", "Send Ctrl+Alt+Del", () => {
 		emulator.keyboard_send_scancodes([
-			0x1D, 0x38, 0x53, 0xD3, 0xB8, 0x9D 
+			0x1D, 0x38, 0x53, 0xD3, 0xB8, 0x9D
 		]);
 	});
 
@@ -356,34 +356,37 @@ function createVMUI(emulator) {
 
 	addSep();
 
-	let isoInserted = false;
-	const isoInput = document.createElement("input");
-	isoInput.type = "file";
-	isoInput.accept = ".iso";
-	isoInput.style.display = "none";
-	document.body.appendChild(isoInput);
+	// Insert / Eject ISO (Hide on Win7 as it lacks a CD/DVD drive)
+	if (!window.location.pathname.includes("win7")) {
+		let isoInserted = false;
+		const isoInput = document.createElement("input");
+		isoInput.type = "file";
+		isoInput.accept = ".iso";
+		isoInput.style.display = "none";
+		document.body.appendChild(isoInput);
 
-	isoInput.addEventListener("change", (e) => {
-		const file = e.target.files[0];
-		if (file) {
-			emulator.set_cdrom({ buffer: file });
-			isoBtn.innerHTML = '<i class="fa-solid fa-eject"></i> Eject ISO';
-			isoInserted = true;
-		}
-	});
+		isoInput.addEventListener("change", (e) => {
+			const file = e.target.files[0];
+			if (file) {
+				emulator.set_cdrom({ buffer: file });
+				isoBtn.innerHTML = '<i class="fa-solid fa-eject"></i> Eject ISO';
+				isoInserted = true;
+			}
+		});
 
-	const isoBtn = addBtn("fa-solid fa-compact-disc", "Insert ISO", "Insert or Eject CD/DVD", () => {
-		if (isoInserted) {
-			emulator.eject_cdrom();
-			isoBtn.innerHTML = '<i class="fa-solid fa-compact-disc"></i> Insert ISO';
-			isoInserted = false;
-			isoInput.value = "";
-		} else {
-			isoInput.click();
-		}
-	});
+		const isoBtn = addBtn("fa-solid fa-compact-disc", "Insert ISO", "Insert or Eject CD/DVD", () => {
+			if (isoInserted) {
+				emulator.eject_cdrom();
+				isoBtn.innerHTML = '<i class="fa-solid fa-compact-disc"></i> Insert ISO';
+				isoInserted = false;
+				isoInput.value = "";
+			} else {
+				isoInput.click();
+			}
+		});
 
-	addSep();
+		addSep();
+	}
 
 	addBtn("fa-solid fa-save", "Save State", "Download VM State", async () => {
 		const state = await emulator.save_state();
@@ -425,6 +428,14 @@ function createVMUI(emulator) {
 
 	addBtn("fa-solid fa-expand", "Fullscreen", "Toggle Fullscreen", () => {
 		emulator.screen_go_fullscreen();
+	});
+
+	const spacer = document.createElement("div");
+	spacer.style.flex = "1";
+	toolbar.appendChild(spacer);
+
+	addBtn("fa-solid fa-house", "Home", "Back to Home", () => {
+		window.location.href = "/";
 	});
 
 	statusbar.innerHTML = `
