@@ -2,7 +2,7 @@
 <html lang="en">
 
 	<head>
-		<title>Browser7 - Windows 8 in Your Browser</title>
+		<title>Browser7 - Windows 7 in Your Browser</title>
 		<script src="libv86.js"></script>
 		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
@@ -10,16 +10,16 @@
 		<script src="main.js" defer></script>
 		<link rel="stylesheet" href="https://unpkg.com/7.css">
 		<link rel="stylesheet" href="styles.css">
-		<meta property="og:title" content="Browser7 - Windows 8 in Your Browser">
-		<meta property="og:description" content="Windows 8 PC emulator in your browser.">
-		<meta property="og:image" content="https://browser7.win/win8.png" />
+		<meta property="og:title" content="Browser7 - Windows 7 in Your Browser">
+		<meta property="og:description" content="Windows 7 PC emulator in your browser.">
+		<meta property="og:image" content="https://browser7.win/win7.png" />
 	</head>
 
 	<body>
 		<div id="watermark">browser7.win</div>
 
 		<div id="legal_disclaimer">
-			<div class="window active">
+			<div class="window glass active">
 				<div class="title-bar">
 					<div class="title-bar-text">Legal Notice & Terms of Use</div>
 					<div class="title-bar-controls">
@@ -57,12 +57,12 @@ This service is provided "AS IS," without warranty of any kind. In no event shal
 
 						<div>
 							<span>Path to your legally owned OS disk image: </span>
-							<input type="text" id="disk_image_input" value="https://f003.backblazeb2.com/b2api/v4/b2_download_file_by_id?fileId=4_zf0e386b7a1df37119e870a10_f227924e4a5b78445_d20260828_m223949_c003_v0312035_t0039_u01787956789537">
+							<input type="text" id="disk_image_input" value="https://f003.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=4_zf0e386b7a1df37119e870a10_f2050208dd46a3b88_d20250722_m103240_c003_v0312024_t0057_u01753180360888">
 							<br>
 							<br>
 
 							<span>Path to the savestate of the corresponding OS: </span>
-							<input type="text" id="savestate_input" value="https://f003.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=4_zf0e386b7a1df37119e870a10_f113306eaaec25c22_d20260828_m223717_c003_v0312046_t0039_u01787956637887">
+							<input type="text" id="savestate_input" value="https://f003.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=4_zf0e386b7a1df37119e870a10_f1090cce9eff9d94b_d20250722_m114357_c003_v0312029_t0053_u01753184637701">
 							<br>
 							<br>
 						</div>
@@ -71,12 +71,14 @@ This service is provided "AS IS," without warranty of any kind. In no event shal
 
 
 					<button id="agree_disclaimer_button" onclick="startEmulatorButton()">Acknowledge and Proceed</button>
+					<a href="/win8">New! Run Windows 8 in your browser</a>
 
 				</div>
 			</div>
 		</div>
 
 		<div id="loading_overlay">
+			<img id="boot_anim" width="300px">
 			<span id="loading_status">Initializing...</span>
 			<progress id="loading_progress" value="0" max="100"></progress>
 		</div>

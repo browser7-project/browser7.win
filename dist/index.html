@@ -1,93 +1,100 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 	<head>
-		<title>Browser7</title>
-		<script src="libv86.js"></script>
-		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-		<script src="http://unpkg.com/jquery-ui"></script>
-		<script src="main.js" defer></script>
-		<link rel="stylesheet" href="https://unpkg.com/7.css">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Browser7 - Run Windows 7 and 8 in Your Browser</title>
 		<link rel="stylesheet" href="styles.css">
-		<meta property="og:title" content="Browser7">
-		<meta property="og:description" content="Windows 7 emulator in your browser using v86.">
+		<meta property="og:title" content="Browser7 - Run Windows 7 and 8 in Your Browser">
+		<meta property="og:description" content="Windows 7 and Windows 8 PC emulator in your browser using v86.">
 	</head>
 
 	<body>
-		<div id="watermark">browser7.win</div>
+		<header class="header">
+			<h1 class="title">Choose an operating system</h1>
+			<p class="subtitle">
+				Select an operating system to boot
+			</p>
+		</header>
 
-		<div id="legal_disclaimer">
-			<div class="window glass active">
-				<div class="title-bar">
-					<div class="title-bar-text">Legal Notice & Terms of Use</div>
-					<div class="title-bar-controls">
-						<button aria-label="Minimize"></button>
-						<button aria-label="Maximize"></button>
-						<button aria-label="Close"></button>
-					</div>
+		<main class="options-container" role="radiogroup" aria-label="Operating Systems">
+			<a href="/win7" class="os-card" id="option-win7" data-target-path="/win7" data-os="Windows 7" tabindex="0" role="radio" aria-checked="false">
+				<div class="preview-box win7">
+					<img src="win7.png" alt="Windows 7 Preview" class="preview-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
 				</div>
-				<div class="window-body has-space">
-					<h1>Legal Notice & Terms of Use</h1>
-					<textarea readonly class="has-scrollbar" rows="8">This project is a technology demonstration of the v86 (https://github.com/copy/v86) emulator and is provided for educational and research purposes only. Use of this service constitutes your full acceptance of the following terms.
 
-1. No Distribution of Copyrighted Software
-This project DOES NOT DISTRIBUTE, BUNDLE, OR PROVIDE any Microsoft Windows operating system images, files, or product keys. The emulator is provided as an empty virtual machine. To use this service, you, the user, must provide your own legally obtained operating system disk image and a valid license. You are solely responsible for ensuring you have the legal right to use the software you load into this emulator. We do not facilitate the acquisition of copyrighted materials in any way.
-
-2. Trademark Disclaimer
-Microsoft®, Windows®, and the Windows logo are registered trademarks of Microsoft Corporation. This project is not affiliated with, endorsed by, or sponsored by Microsoft Corporation. All trademarks are used for identification and descriptive purposes only under the principle of nominative fair use. This project makes no claim of ownership to these trademarks.
-
-3. User Responsibility and EULA Compliance
-By loading an operating system into this emulator, you affirm that you own a legitimate license for that software and agree to abide by all its terms, including the applicable Microsoft Software License Terms or End-User License Agreement (EULA). You assume all risks associated with its use. Do not enter or use any sensitive personal, financial, or confidential information within the emulated environment.
-
-4. Limitation of Liability & No Warranty
-This service is provided "AS IS," without warranty of any kind. In no event shall the project creators be liable for any claims, damages, or liabilities, including but not limited to copyright infringement claims initiated against you, data loss, or security breaches arising from your use of this service.</textarea>
-
-					<div>
-						<input type="checkbox" id="agree1_checkbox">
-						<label for="agree1_checkbox">I have read, understood, and agree to the Legal Notice and Terms of
-							Use.</label>
-						<br>
-						<br>
-
-						<input type="checkbox" id="agree2_checkbox">
-						<label for="agree2_checkbox">I affirm that I own a legitimate license for the software I will
-							load.</label>
-						<br>
-						<br>
-
-						<div>
-							<span>Path to your legally owned OS disk image: </span>
-							<input type="text" id="disk_image_input" value="https://f003.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=4_zf0e386b7a1df37119e870a10_f2050208dd46a3b88_d20250722_m103240_c003_v0312024_t0057_u01753180360888">
-							<br>
-							<br>
-
-							<span>Path to the savestate of the corresponding OS: </span>
-							<input type="text" id="savestate_input" value="https://f003.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=4_zf0e386b7a1df37119e870a10_f1090cce9eff9d94b_d20250722_m114357_c003_v0312029_t0053_u01753184637701">
-							<br>
-							<br>
-						</div>
-
-					</div>
-
-
-					<button id="agree_disclaimer_button" onclick="startEmulatorButton()">Acknowledge and Proceed</button>
-					<a href="/win8">New! Run Windows 8 in your browser!</a>
-
+				<div class="os-header">
+					<h2 class="os-name">Windows 7</h2>
+					<span class="os-edition">(Thin PC Edition)</span>
 				</div>
-			</div>
-		</div>
 
-		<div id="loading_overlay">
-			<img id="boot_anim" width="300px">
-			<span id="loading_status">Initializing...</span>
-			<progress id="loading_progress" value="0" max="100"></progress>
-		</div>
+				<ul class="specs-list">
+					<li class="spec-item">
+						<svg class="spec-icon" viewBox="0 0 24 24">
+							<path d="M21 3H3C1.9 3 1 3.9 1 5V17C1 18.1 1.9 19 3 19H8V21H16V19H21C22.1 19 23 18.1 23 17V5C23 3.9 22.1 3 21 3ZM21 17H3V5H21V17Z" />
+						</svg>
+						<span>Resolution: <span class="spec-highlight">800x600</span></span>
+					</li>
+					<li class="spec-item">
+						<svg class="spec-icon" viewBox="0 0 24 24">
+							<path d="M17 17H7V7H17M21 11V9H19V7C19 5.9 18.1 5 17 5H15V3H13V5H11V3H9V5H7C5.9 5 5 5.9 5 7V9H3V11H5V13H3V15H5V17C5 18.1 5.9 19 7 19H9V21H11V19H13V21H15V19H17C18.1 19 19 18.1 19 17V15H21V13H19V11H21Z" />
+						</svg>
+						<span>Memory: <span class="spec-highlight">256 MB</span></span>
+					</li>
+					<li class="spec-item">
+						<svg class="spec-icon" viewBox="0 0 24 24">
+							<path d="M4 4H20V8H4V4ZM4 10H20V20H4V10ZM6 12V18H18V12H6Z" />
+						</svg>
+						<span>Apps: <span class="spec-highlight">Limited Win32 apps</span></span>
+					</li>
+					<li class="spec-item">
+						<svg class="spec-icon" viewBox="0 0 24 24">
+							<path d="M5 20H19V18H5M19 9H15V3H9V9H5L12 16L19 9Z" />
+						</svg>
+						<span>Download size: <span class="spec-highlight">60 MB</span></span>
+					</li>
+				</ul>
+			</a>
 
-		<div id="screen_container">
-			<div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
-			<canvas style="display: none" onclick="emulator.lock_mouse()"></canvas>
-		</div>
+			<a href="/win8" class="os-card" id="option-win8" data-target-path="/win8" data-os="Windows 8" tabindex="0" role="radio" aria-checked="false">
+				<div class="preview-box">
+					<img src="win8.png" alt="Windows 8 Preview" class="preview-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+				</div>
+
+				<div class="os-header">
+					<h2 class="os-name">Windows 8</h2>
+					<span class="os-edition">(Build 8102)</span>
+				</div>
+
+				<ul class="specs-list">
+					<li class="spec-item">
+						<svg class="spec-icon" viewBox="0 0 24 24">
+							<path d="M21 3H3C1.9 3 1 3.9 1 5V17C1 18.1 1.9 19 3 19H8V21H16V19H21C22.1 19 23 18.1 23 17V5C23 3.9 22.1 3 21 3ZM21 17H3V5H21V17Z" />
+						</svg>
+						<span>Resolution: <span class="spec-highlight">1280x768</span></span>
+					</li>
+					<li class="spec-item">
+						<svg class="spec-icon" viewBox="0 0 24 24">
+							<path d="M17 17H7V7H17M21 11V9H19V7C19 5.9 18.1 5 17 5H15V3H13V5H11V3H9V5H7C5.9 5 5 5.9 5 7V9H3V11H5V13H3V15H5V17C5 18.1 5.9 19 7 19H9V21H11V19H13V21H15V19H17C18.1 19 19 18.1 19 17V15H21V13H19V11H21Z" />
+						</svg>
+						<span>Memory: <span class="spec-highlight">512 MB</span></span>
+					</li>
+					<li class="spec-item">
+						<svg class="spec-icon" viewBox="0 0 24 24">
+							<path d="M4 4H20V8H4V4ZM4 10H20V20H4V10ZM6 12V18H18V12H6Z" />
+						</svg>
+						<span>Apps: <span class="spec-highlight">Win32+WinRT apps</span></span>
+					</li>
+					<li class="spec-item">
+						<svg class="spec-icon" viewBox="0 0 24 24">
+							<path d="M5 20H19V18H5M19 9H15V3H9V9H5L12 16L19 9Z" />
+						</svg>
+						<span>Download size: <span class="spec-highlight">120 MB</span></span>
+					</li>
+				</ul>
+			</a>
+		</main>
 	</body>
 
 </html>
