@@ -61,6 +61,29 @@
 			</div>
 		</div>
 
+		<div id="mode_screen" style="display: none;">
+			<div class="license-content">
+				<h1 class="license-title">Choose a mode</h1>
+				<p class="license-subtitle">How would you like to run the emulator?</p>
+
+				<div class="mode-options">
+					<div class="mode-card" id="mode_stream">
+						<h3>Stream Disk</h3>
+						<p>Instant startup, uses no local disk space.</p>
+						<p>Requires a fast, stable internet connection.</p>
+						<p>Very slow disk speed, be patient.</p>
+						<p><b>Best to try it quick without waiting.</b></p>
+					</div>
+					<div class="mode-card" id="mode_download">
+						<h3>Download & Store Disk Locally</h3>
+						<p>Requires a large initial download (~4 GB).</p>
+						<p>Very fast disk speed, signifcantly more usable.</p>
+						<p><b>Recommended for long-term and regular use.</b></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div id="loading_overlay">
 			<span id="loading_status">Initializing...</span>
 			<progress id="loading_progress" value="0" max="100"></progress>

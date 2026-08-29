@@ -5,6 +5,71 @@ const DB_NAME = "browser7_storage";
 const DB_VERSION = 1;
 const STORE_NAME = "savestates";
 
+// Generates a short, unique, and file-system-safe name based on the URL
+function getDiskFilename(url) {
+	let hash = 0;
+	for (let i = 0; i < url.length; i++) {
+		hash = ((hash << 5) - hash) + url.charCodeAt(i);
+		hash |= 0; // Convert to 32bit integer
+	}
+	// Append the last 10 alphanumeric chars of the URL to guarantee uniqueness
+	const suffix = url.replace(/[^a-zA-Z0-9]/g, '').slice(-10);
+	return "disk_" + Math.abs(hash).toString(36) + "_" + suffix + ".img";
+}
+
+// OPFS Storage Utilities
+function isOPFSSupported() {
+	return !!(navigator.storage && navigator.storage.getDirectory);
+}
+
+async function isDiskStored(filename) {
+	if (!isOPFSSupported()) return false;
+	try {
+		const dir = await navigator.storage.getDirectory();
+		await dir.getFileHandle(filename);
+		return true;
+	} catch (e) {
+		return false;
+	}
+}
+
+async function getStoredDisk(filename) {
+	if (!isOPFSSupported()) return null;
+	try {
+		const dir = await navigator.storage.getDirectory();
+		const handle = await dir.getFileHandle(filename);
+		return await handle.getFile();
+	} catch (e) {
+		return null;
+	}
+}
+
+async function downloadDiskToStorage(url, filename, onProgress) {
+	if (!isOPFSSupported()) throw new Error("Origin Private File System is not supported in this browser.");
+	
+	const dir = await navigator.storage.getDirectory();
+	const fileHandle = await dir.getFileHandle(filename, { create: true });
+	const writable = await fileHandle.createWritable();
+	
+	const response = await fetch(url);
+	if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+	
+	const contentLength = response.headers.get('content-length');
+	const total = contentLength ? parseInt(contentLength, 10) : 0;
+	let loaded = 0;
+	
+	const progressStream = new TransformStream({
+		transform(chunk, controller) {
+			loaded += chunk.length;
+			onProgress(loaded, total);
+			controller.enqueue(chunk);
+		}
+	});
+	
+	await response.body.pipeThrough(progressStream).pipeTo(writable);
+	return await fileHandle.getFile();
+}
+
 function openDatabase() {
 	return new Promise((resolve, reject) => {
 		if (!window.indexedDB) {
@@ -116,6 +181,72 @@ function downloadSavestateWithProgress(url, fallbackSize, onProgress) {
 	});
 }
 
+function promptModeSelection(config, diskPath, savestatePath) {
+	const modeScreen = document.getElementById("mode_screen");
+	const diskFilename = getDiskFilename(diskPath);
+
+	if (!modeScreen) {
+		boot(config, diskPath, savestatePath);
+		return;
+	}
+
+	modeScreen.style.display = "flex";
+
+	document.getElementById("mode_stream").onclick = () => {
+		modeScreen.style.display = "none";
+		boot(config, diskPath, savestatePath);
+	};
+
+	document.getElementById("mode_download").onclick = async () => {
+		modeScreen.style.display = "none";
+		const loadingOverlay = document.getElementById("loading_overlay");
+		const loadingStatus = document.getElementById("loading_status");
+		const loadingProgress = document.getElementById("loading_progress");
+		const bootAnim = document.getElementById("boot_anim");
+		
+		if (bootAnim && config.bootAnim) {
+			bootAnim.src = config.bootAnim;
+			bootAnim.style.display = "block";
+		}
+		
+		loadingOverlay.style.display = "flex";
+		loadingStatus.textContent = "Downloading OS disk image... This may take several minutes.";
+		loadingProgress.value = 0;
+		
+		try {
+			const file = await downloadDiskToStorage(diskPath, diskFilename, (loaded, total) => {
+				if (total) {
+					const percent = (loaded / total) * 100;
+					loadingProgress.value = percent;
+					loadingStatus.textContent = `Downloading disk image... ${percent.toFixed(1)}% (${(loaded/1024/1024).toFixed(1)} / ${(total/1024/1024).toFixed(1)} MB)`;
+				} else {
+					loadingStatus.textContent = `Downloading disk image... ${(loaded/1024/1024).toFixed(1)} MB`;
+				}
+			});
+			boot(config, file, savestatePath);
+		} catch (err) {
+			console.error("Disk download failed:", err);
+			alert("Download failed or storage limit exceeded. Falling back to Stream mode.");
+			boot(config, diskPath, savestatePath);
+		}
+	};
+}
+
+async function processBootFlow(config, diskPath, savestatePath) {
+	const diskFilename = getDiskFilename(diskPath);
+
+	const hasLocalDisk = await isDiskStored(diskFilename);
+	if (hasLocalDisk) {
+		const file = await getStoredDisk(diskFilename);
+		if (file) {
+			boot(config, file, savestatePath);
+			return;
+		}
+	}
+	
+	promptModeSelection(config, diskPath, savestatePath);
+}
+
 function initEmulator(config) {
 	const licenseScreen = document.getElementById("license_screen");
 	const agreeCheckbox = document.getElementById("agree_checkbox");
@@ -133,14 +264,12 @@ function initEmulator(config) {
 	const termsAccepted = localStorage.getItem(TERMS_STORAGE_KEY) === "true";
 
 	if (termsAccepted) {
-		if (licenseScreen) {
-			licenseScreen.style.display = "none";
-		}
-		boot(config, diskInput ? diskInput.value : config.hdaUrl, savestateInput ? savestateInput.value : config.stateUrl);
+		if (licenseScreen) licenseScreen.style.display = "none";
+		const diskPath = diskInput ? diskInput.value.trim() : config.hdaUrl;
+		const savestatePath = savestateInput ? savestateInput.value.trim() : config.stateUrl;
+		processBootFlow(config, diskPath, savestatePath);
 	} else {
-		if (licenseScreen) {
-			licenseScreen.style.display = "flex";
-		}
+		if (licenseScreen) licenseScreen.style.display = "flex";
 
 		if (agreeCheckbox && acceptButton) {
 			agreeCheckbox.addEventListener("change", function () {
@@ -150,8 +279,8 @@ function initEmulator(config) {
 			acceptButton.addEventListener("click", function () {
 				if (!agreeCheckbox.checked) return;
 
-				const diskPath = diskInput.value.trim();
-				const savestatePath = savestateInput.value.trim();
+				const diskPath = diskInput ? diskInput.value.trim() : config.hdaUrl;
+				const savestatePath = savestateInput ? savestateInput.value.trim() : config.stateUrl;
 
 				if (!diskPath.startsWith("http")) {
 					alert("Disk image path is invalid!");
@@ -165,25 +294,29 @@ function initEmulator(config) {
 				localStorage.setItem(TERMS_STORAGE_KEY, "true");
 				licenseScreen.style.display = "none";
 
-				boot(config, diskPath, savestatePath);
+				processBootFlow(config, diskPath, savestatePath);
 			});
 		}
 	}
 }
 
-async function boot(config, diskPath, savestatePath) {
+async function boot(config, diskPathOrFile, savestatePath) {
 	const loadingOverlay = document.getElementById("loading_overlay");
 	const loadingProgress = document.getElementById("loading_progress");
 	const loadingStatus = document.getElementById("loading_status");
 	const bootAnim = document.getElementById("boot_anim");
 
-	if (bootAnim && config.bootAnim) {
+	if (bootAnim && config.bootAnim && typeof diskPathOrFile === 'string') {
 		bootAnim.src = config.bootAnim;
 		bootAnim.style.display = "block";
 	}
 
+	if (loadingStatus && loadingOverlay.style.display !== "flex") {
+		loadingOverlay.style.display = "flex";
+	}
+
 	if (loadingStatus) {
-		loadingStatus.textContent = "Checking cache...";
+		loadingStatus.textContent = "Checking cache for savestate...";
 	}
 
 	let stateBuffer = null;
@@ -204,7 +337,7 @@ async function boot(config, diskPath, savestatePath) {
 	} else {
 		try {
 			if (loadingStatus) {
-				loadingStatus.textContent = "Downloading data... 0.0%";
+				loadingStatus.textContent = "Downloading savestate... 0.0%";
 			}
 
 			stateBuffer = await downloadSavestateWithProgress(
@@ -217,10 +350,10 @@ async function boot(config, diskPath, savestatePath) {
 						const totalMB = (total / 1024 / 1024).toFixed(1);
 
 						if (loadingProgress) loadingProgress.value = progress;
-						if (loadingStatus) loadingStatus.textContent = `Downloading data... ${progress.toFixed(1)}% (${loadedMB} / ${totalMB} MB)`;
+						if (loadingStatus) loadingStatus.textContent = `Downloading savestate... ${progress.toFixed(1)}% (${loadedMB} / ${totalMB} MB)`;
 					} else {
 						const loadedMB = (loaded / 1024 / 1024).toFixed(1);
-						if (loadingStatus) loadingStatus.textContent = `Downloading data... (${loadedMB} MB)`;
+						if (loadingStatus) loadingStatus.textContent = `Downloading savestate... (${loadedMB} MB)`;
 					}
 				}
 			);
@@ -252,17 +385,25 @@ async function boot(config, diskPath, savestatePath) {
 		vga_bios: {
 			url: "/build/vgabios.bin",
 		},
-		hda: {
-			url: diskPath,
-			async: true,
-			size: config.hdaSize
-		},
 		autostart: true,
 		acpi: true,
 		initial_state: {
 			buffer: stateBuffer
 		}
 	};
+
+	if (typeof diskPathOrFile === 'string') {
+		v86Config.hda = {
+			url: diskPathOrFile,
+			async: true,
+			size: config.hdaSize
+		};
+	} else {
+		v86Config.hda = {
+			buffer: diskPathOrFile,
+			async: true
+		};
+	}
 
 	if (config.networkRelayUrl) {
 		v86Config.network_relay_url = config.networkRelayUrl;
@@ -412,6 +553,29 @@ function createVMUI(emulator) {
 
 	addBtn("fa-solid fa-upload", "Load State", "Upload VM State", () => {
 		stateInput.click();
+	});
+
+	addBtn("fa-solid fa-trash", "Clear Cache", "Delete stored disk and state", async () => {
+		if (confirm("Are you sure you want to clear local storage? This will delete the downloaded disk image and saved states.")) {
+			try {
+				const db = await openDatabase();
+				db.transaction(STORE_NAME, "readwrite").objectStore(STORE_NAME).clear();
+			} catch (e) {
+				console.warn("Could not clear IndexedDB", e);
+			}
+			if (isOPFSSupported()) {
+				try {
+					const dir = await navigator.storage.getDirectory();
+					for await (const [name] of dir.entries()) {
+						await dir.removeEntry(name, { recursive: true });
+					}
+				} catch (e) {
+					console.warn("Could not clear OPFS", e);
+				}
+			}
+			alert("Cache cleared! The page will now reload.");
+			window.location.reload();
+		}
 	});
 
 	addSep();
