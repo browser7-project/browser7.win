@@ -272,7 +272,207 @@ async function boot(config, diskPath, savestatePath) {
 
 	const emulator = window.emulator = new V86(v86Config);
 
+	createVMUI(emulator);
+
 	emulator.add_listener("emulator-ready", function () {
 		if (loadingOverlay) loadingOverlay.style.display = "none";
 	});
+}
+
+function createVMUI(emulator) {
+	const fa = document.createElement("link");
+	fa.rel = "stylesheet";
+	fa.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css";
+	document.head.appendChild(fa);
+
+	const vmWindow = document.createElement("div");
+	vmWindow.id = "vm-window";
+	
+	const toolbar = document.createElement("div");
+	toolbar.id = "vm-toolbar";
+
+	const screenWrapper = document.createElement("div");
+	screenWrapper.id = "vm-screen-wrapper";
+
+	const statusbar = document.createElement("div");
+	statusbar.id = "vm-statusbar";
+
+	const screenContainer = document.getElementById("screen_container");
+	document.body.insertBefore(vmWindow, screenContainer);
+	vmWindow.appendChild(toolbar);
+	vmWindow.appendChild(screenWrapper);
+	vmWindow.appendChild(statusbar);
+	screenWrapper.appendChild(screenContainer);
+
+	function addBtn(icon, text, title, onClick) {
+		const btn = document.createElement("button");
+		btn.className = "toolbar-btn";
+		btn.title = title;
+		btn.innerHTML = `<i class="${icon}"></i> ${text}`;
+		btn.onclick = onClick;
+		toolbar.appendChild(btn);
+		return btn;
+	}
+
+	function addSep() {
+		const sep = document.createElement("div");
+		sep.className = "toolbar-separator";
+		toolbar.appendChild(sep);
+	}
+
+
+	let isPaused = false;
+	const pauseBtn = addBtn("fa-solid fa-pause", "Pause", "Pause / Resume", () => {
+		if (isPaused) {
+			emulator.run();
+			pauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Pause';
+			isPaused = false;
+		} else {
+			emulator.stop();
+			pauseBtn.innerHTML = '<i class="fa-solid fa-play"></i> Resume';
+			isPaused = true;
+		}
+	});
+
+	addSep();
+
+	addBtn("fa-solid fa-keyboard", "Ctrl+Alt+Del", "Send Ctrl+Alt+Del", () => {
+		emulator.keyboard_send_scancodes([
+			0x1D, 0x38, 0x53, 0xD3, 0xB8, 0x9D 
+		]);
+	});
+
+	addBtn("fa-brands fa-windows", "Win Key", "Send Windows Key", () => {
+		emulator.keyboard_send_scancodes([0xE0, 0x5B, 0xE0, 0xDB]);
+	});
+
+	// Paste Text
+	addBtn("fa-solid fa-paste", "Paste", "Paste Text to VM", () => {
+		const text = prompt("Enter text to paste to VM:");
+		if (text) {
+			emulator.keyboard_send_text(text);
+		}
+	});
+
+	addSep();
+
+	let isoInserted = false;
+	const isoInput = document.createElement("input");
+	isoInput.type = "file";
+	isoInput.accept = ".iso";
+	isoInput.style.display = "none";
+	document.body.appendChild(isoInput);
+
+	isoInput.addEventListener("change", (e) => {
+		const file = e.target.files[0];
+		if (file) {
+			emulator.set_cdrom({ buffer: file });
+			isoBtn.innerHTML = '<i class="fa-solid fa-eject"></i> Eject ISO';
+			isoInserted = true;
+		}
+	});
+
+	const isoBtn = addBtn("fa-solid fa-compact-disc", "Insert ISO", "Insert or Eject CD/DVD", () => {
+		if (isoInserted) {
+			emulator.eject_cdrom();
+			isoBtn.innerHTML = '<i class="fa-solid fa-compact-disc"></i> Insert ISO';
+			isoInserted = false;
+			isoInput.value = "";
+		} else {
+			isoInput.click();
+		}
+	});
+
+	addSep();
+
+	addBtn("fa-solid fa-save", "Save State", "Download VM State", async () => {
+		const state = await emulator.save_state();
+		const a = document.createElement("a");
+		a.download = "browser7_state.bin";
+		a.href = window.URL.createObjectURL(new Blob([state]));
+		a.click();
+	});
+
+	const stateInput = document.createElement("input");
+	stateInput.type = "file";
+	stateInput.accept = ".bin";
+	stateInput.style.display = "none";
+	document.body.appendChild(stateInput);
+
+	stateInput.addEventListener("change", async (e) => {
+		const file = e.target.files[0];
+		if (file) {
+			const buffer = await file.arrayBuffer();
+			emulator.restore_state(buffer);
+		}
+	});
+
+	addBtn("fa-solid fa-upload", "Load State", "Upload VM State", () => {
+		stateInput.click();
+	});
+
+	addSep();
+
+	addBtn("fa-solid fa-camera", "Screenshot", "Take Screenshot", () => {
+		const img = emulator.screen_make_screenshot();
+		if (img && img.src) {
+			const a = document.createElement("a");
+			a.download = "browser7_screenshot.png";
+			a.href = img.src;
+			a.click();
+		}
+	});
+
+	addBtn("fa-solid fa-expand", "Fullscreen", "Toggle Fullscreen", () => {
+		emulator.screen_go_fullscreen();
+	});
+
+	statusbar.innerHTML = `
+		<div class="status-item" title="Disk Activity">
+			<i class="fa-solid fa-hard-drive"></i>
+			<div class="led" id="led-disk"></div>
+		</div>
+		<div class="status-item" title="Network Activity">
+			<i class="fa-solid fa-network-wired"></i>
+			<div class="led" id="led-net"></div>
+		</div>
+		<div class="status-item" title="Instruction Speed" style="min-width: 80px; justify-content: flex-end;">
+			<span id="mips-counter">0 MIPS</span>
+		</div>
+	`;
+
+	let diskTimeout;
+	const ledDisk = document.getElementById("led-disk");
+	function blinkDisk(color) {
+		if (!ledDisk) return;
+		ledDisk.className = `led ${color}`;
+		clearTimeout(diskTimeout);
+		diskTimeout = setTimeout(() => { ledDisk.className = "led"; }, 50);
+	}
+
+	let netTimeout;
+	const ledNet = document.getElementById("led-net");
+	function blinkNet(color) {
+		if (!ledNet) return;
+		ledNet.className = `led ${color}`;
+		clearTimeout(netTimeout);
+		netTimeout = setTimeout(() => { ledNet.className = "led"; }, 50);
+	}
+
+	emulator.add_listener("ide-read-start", () => blinkDisk("green"));
+	emulator.add_listener("ide-read-end", () => blinkDisk("green"));
+	emulator.add_listener("ide-write-end", () => blinkDisk("red"));
+	
+	emulator.add_listener("net0-receive", () => blinkNet("green"));
+	emulator.add_listener("net0-send", () => blinkNet("red"));
+
+	let lastCounter = 0;
+	setInterval(() => {
+		if (!emulator.is_running()) return;
+		const current = emulator.get_instruction_counter();
+		const diff = current - lastCounter;
+		lastCounter = current;
+		const mips = (diff / 1000000).toFixed(1);
+		document.getElementById("mips-counter").textContent = `${mips} MIPS`;
+	}, 1000);
 }

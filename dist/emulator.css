@@ -1,7 +1,79 @@
+@font-face {
+	font-family: SegoeUI;
+	src:
+		local("Segoe UI"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/normal/latest.woff2) format("woff2"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/normal/latest.woff) format("woff"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/normal/latest.ttf) format("truetype");
+	font-weight: 400;
+}
+
+@font-face {
+	font-family: SegoeUI;
+	src:
+		local("Segoe UI Semilight"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semilight/latest.woff2) format("woff2"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semilight/latest.woff) format("woff"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semilight/latest.ttf) format("truetype");
+	font-weight: 200;
+}
+
+@font-face {
+	font-family: SegoeUI;
+	src:
+		local("Segoe UI Light"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/light/latest.woff2) format("woff2"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/light/latest.woff) format("woff"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/light/latest.ttf) format("truetype");
+	font-weight: 100;
+}
+
+@font-face {
+	font-family: SegoeUI;
+	src:
+		local("Segoe UI Semibold"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.woff2) format("woff2"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.woff) format("woff"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/semibold/latest.ttf) format("truetype");
+	font-weight: 600;
+}
+
+@font-face {
+	font-family: SegoeUI;
+	src:
+		local("Segoe UI Bold"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.woff2) format("woff2"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.woff) format("woff"),
+		url(//c.s-microsoft.com/static/fonts/segoe-ui/west-european/bold/latest.ttf) format("truetype");
+	font-weight: 700;
+}
+
+:root {
+	--bg-color: #19054d;
+	--tile-bg: rgba(255, 255, 255, 0.05);
+	--tile-hover-bg: rgba(255, 255, 255, 0.12);
+	--tile-active-bg: rgba(255, 255, 255, 0.2);
+	--tile-border: rgba(255, 255, 255, 0.25);
+	--tile-hover-border: #ffffff;
+	--accent-blue: #0072c6;
+	--accent-cyan: #00bcf2;
+	--accent-teal: #007a99;
+	--text-white: #ffffff;
+	--text-dim: #c5b8e6;
+}
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	user-select: none;
+	-webkit-user-select: none;
+}
+
 body {
 	margin: 0;
 	padding: 0;
-	background: #000;
+	background: #111;
 	color: #ffffff;
 	font-family: SegoeUI, "Segoe UI Light", "Segoe UI", Tahoma, sans-serif;
 	overflow: hidden;
@@ -9,18 +81,130 @@ body {
 	width: 100vw;
 }
 
-#screen_container {
+#vm-window {
+	display: flex;
+	flex-direction: column;
 	width: 100vw;
 	height: 100vh;
+	background: #222;
+}
+
+#vm-toolbar {
+	background: #333;
+	display: flex;
+	align-items: center;
+	padding: 6px 12px;
+	gap: 8px;
+	height: 44px;
+	border-bottom: 1px solid #111;
+	flex-wrap: nowrap;
+	overflow-x: auto;
+}
+
+#vm-toolbar::-webkit-scrollbar { 
+	display: none; 
+}
+
+.toolbar-separator {
+	width: 1px;
+	height: 24px;
+	background: #555;
+	margin: 0 4px;
+}
+
+.toolbar-btn {
+	background: transparent;
+	color: #ddd;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	padding: 6px 10px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-family: inherit;
+	font-size: 13px;
+	white-space: nowrap;
+	transition: all 0.15s ease;
+}
+
+.toolbar-btn:hover {
+	background: #444;
+	border-color: #555;
+	color: #fff;
+}
+
+.toolbar-btn:active {
+	background: #555;
+}
+
+#vm-screen-wrapper {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	background: #000;
+	position: relative;
+}
+
+#screen_container {
+	width: 100%;
+	height: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
 #screen_container canvas {
-	height: 100vh !important;
+	height: 100% !important;
 	width: auto !important;
+	max-width: 100%;
+	max-height: 100%;
 	margin: 0 auto;
+	object-fit: contain;
+}
+
+#vm-statusbar {
+	background: #e0e0e0;
+	color: #333;
+	height: 28px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 0 16px;
+	font-size: 12px;
+	border-top: 1px solid #ccc;
+	gap: 20px;
+}
+
+.status-item {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+#mips-counter {
+	font-family: monospace;
+}
+
+.led {
+	width: 14px;
+	height: 8px;
+	border-radius: 2px;
+	background: #999;
+	box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+	transition: background 0.05s ease;
+}
+
+.led.green {
+	background: #4CAF50;
+	box-shadow: 0 0 4px #4CAF50, inset 0 1px 2px rgba(255,255,255,0.4);
+}
+
+.led.red {
+	background: #F44336;
+	box-shadow: 0 0 4px #F44336, inset 0 1px 2px rgba(255,255,255,0.4);
 }
 
 #watermark {
@@ -30,7 +214,7 @@ body {
 	font-weight: 200;
 	z-index: 9999;
 	position: fixed;
-	top: 10px;
+	top: 54px;
 	left: 0;
 	right: 0;
 	text-align: center;
