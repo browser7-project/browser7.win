@@ -8,15 +8,15 @@ function startEmulator(diskPath, savestate) {
 	const loadingStatus = document.getElementById("loading_status");
 
 	var emulator = window.emulator = new V86({
-		wasm_path: "v86.wasm",
+		wasm_path: "/build/v86_2025-02-15/v86.wasm",
 		memory_size: 256 * 1024 * 1024,
 		vga_memory_size: 32 * 1024 * 1024,
 		screen_container: document.getElementById("screen_container"),
 		bios: {
-			url: "seabios.bin",
+			url: "/build/seabios.bin",
 		},
 		vga_bios: {
-			url: "vgabios.bin",
+			url: "/build/vgabios.bin",
 		},
 		hda: {
 			url: diskPath,
