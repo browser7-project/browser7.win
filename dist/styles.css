@@ -6,11 +6,11 @@ html::before {
 	background: red;
 	color: white;
 	z-index: 99999;
-	content: "browser7.win will permanently shut down on 2026-10-22 00:00 UTC due to high costs";
+	content: "";
 	font-family: "SegoeUI";
 	font-size: 24px;
 	text-align: center;
-	padding: 5px;
+	padding: 0px;
 	pointer-events: none;
 	white-space: nowrap;
 }
