@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Browser7 - Windows 11 in Your Browser</title>
+		<script src="/build/v86_2026-10-18/libv86.js"></script>
+		<script src="/emulator.js" defer></script>
+		<link rel="stylesheet" href="/styles.css">
+		<link rel="stylesheet" href="/emulator.css">
+		<meta property="og:title" content="Browser7 - Windows 11 in Your Browser">
+		<meta property="og:description" content="Windows 11 PC emulator in your browser.">
+		<meta property="og:image" content="https://browser7.win/screenshots/win11.png">
+	</head>
+
+	<body>
+		<div id="watermark">browser7.win</div>
+
+		<!-- Metro License Terms Screen -->
+		<div id="license_screen" style="display: none;">
+			<div class="license-content">
+				<h1 class="license-title">License terms</h1>
+				<p class="license-subtitle">Please read this so you know what you're agreeing to.</p>
+
+				<div class="license-body">
+					<h3>LEGAL NOTICE & TERMS OF USE</h3>
+					<p>This project is a technology demonstration of the v86 emulator and is provided for educational and research purposes only. Use of this service constitutes your full acceptance of the following terms.</p>
+
+					<h4>1. NO DISTRIBUTION OF COPYRIGHTED SOFTWARE</h4>
+					<p>This project DOES NOT DISTRIBUTE, BUNDLE, OR PROVIDE any Microsoft Windows operating system images, files, or product keys. The emulator is provided as an empty virtual machine. To use this service, you, the user, must provide your own legally obtained operating system disk image and a valid license. You are solely responsible for ensuring you have the legal right to use the software you load into this emulator. We do not facilitate the acquisition of copyrighted materials in any way.</p>
+
+					<h4>2. TRADEMARK DISCLAIMER</h4>
+					<p>Microsoft®, Windows®, and the Windows logo are registered trademarks of Microsoft Corporation. This project is not affiliated with, endorsed by, or sponsored by Microsoft Corporation. All trademarks are used for identification and descriptive purposes only under the principle of nominative fair use. This project makes no claim of ownership to these trademarks.</p>
+
+					<h4>3. USER RESPONSIBILITY AND EULA COMPLIANCE</h4>
+					<p>By loading an operating system into this emulator, you affirm that you own a legitimate license for that software and agree to abide by all its terms, including the applicable Microsoft Software License Terms or End-User License Agreement (EULA). You assume all risks associated with its use. Do not enter or use any sensitive personal, financial, or confidential information within the emulated environment.</p>
+
+					<h4>4. LIMITATION OF LIABILITY & NO WARRANTY</h4>
+					<p>This service is provided "AS IS," without warranty of any kind. In no event shall the project creators be liable for any claims, damages, or liabilities, including but not limited to copyright infringement claims initiated against you, data loss, or security breaches arising from your use of this service.</p>
+				</div>
+
+				<div class="license-inputs">
+					<div class="license-input-group">
+						<label for="disk_image_input">Path to your legally owned OS disk image:</label>
+						<input type="text" id="disk_image_input">
+					</div>
+					<div class="license-input-group">
+						<label for="savestate_input">Path to the savestate of the corresponding OS:</label>
+						<input type="text" id="savestate_input">
+					</div>
+				</div>
+			</div>
+
+			<div class="license-footer">
+				<label class="license-checkbox-container">
+					<input type="checkbox" id="agree_checkbox">
+					<span>I accept the license terms</span>
+				</label>
+				<button id="accept_button" class="metro-btn-accept" disabled>Accept</button>
+			</div>
+		</div>
+
+		<div id="mode_screen" style="display: none;">
+			<div class="license-content">
+				<h1 class="license-title">Choose a mode</h1>
+				<p class="license-subtitle">How would you like to run the emulator?</p>
+
+				<div class="mode-options">
+					<div class="mode-card" id="mode_stream">
+						<h3>Stream Disk</h3>
+						<p>Instant startup, uses no local disk space.</p>
+						<p>Requires a fast, stable internet connection.</p>
+						<p>Very slow disk speed, be patient.</p>
+						<p><b>Best to try it quick without waiting.</b></p>
+					</div>
+					<div class="mode-card" id="mode_download">
+						<h3>Download & Store Disk Locally</h3>
+						<p>Requires a large initial download (~4 GB).</p>
+						<p>Very fast disk speed, signifcantly more usable.</p>
+						<p><b>Recommended for long-term and regular use.</b></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="loading_overlay">
+			<span id="loading_status">Initializing...</span>
+			<progress id="loading_progress" value="0" max="100"></progress>
+		</div>
+
+		<div id="screen_container">
+			<div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
+			<canvas style="display: none" onclick="window.emulator && window.emulator.lock_mouse()"></canvas>
+		</div>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+				initEmulator({
+					wasmPath: "/build/v86_2026-10-18/v86.wasm",
+					memorySize: 1024 * 1024 * 1024,
+					vgaMemorySize: 64 * 1024 * 1024,
+					hdaUrl: "https://data.browser7.win/browser7/win11.img",
+					hdaSize: 4348444672,
+					stateUrl: "https://data.browser7.win/browser7/win11state.bin.zst",
+					stateSize: 280329895
+				});
+			});
+		</script>
+	</body>
+
+</html>
