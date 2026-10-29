@@ -19,14 +19,14 @@
 		</header>
 
 		<main class="options-container" role="radiogroup" aria-label="Operating Systems">
-			<a href="/win7" class="os-card" id="option-win7" data-target-path="/win7" data-os="Windows 7" tabindex="0" role="radio" aria-checked="false">
-				<div class="preview-box win7">
-					<img src="/screenshots/win7.png" alt="Windows 7 Preview" class="preview-img" onerror="this.style.display='none';">
+			<a href="/win11" class="os-card" id="option-win11" data-target-path="/win1" data-os="Windows 11" tabindex="0" role="radio" aria-checked="false">
+				<div class="preview-box">
+					<img src="/screenshots/win11.png" alt="Windows 11 Preview" class="preview-img" onerror="this.style.display='none';">
 				</div>
 
 				<div class="os-header">
-					<h2 class="os-name">Windows 7</h2>
-					<span class="os-edition">(Thin PC Edition)</span>
+					<h2 class="os-name">Windows 11</h2>
+					<span class="os-edition">(Build 22000)</span>
 				</div>
 
 				<ul class="specs-list">
@@ -34,19 +34,13 @@
 						<svg class="spec-icon" viewBox="0 0 24 24">
 							<path d="M21 3H3C1.9 3 1 3.9 1 5V17C1 18.1 1.9 19 3 19H8V21H16V19H21C22.1 19 23 18.1 23 17V5C23 3.9 22.1 3 21 3ZM21 17H3V5H21V17Z" />
 						</svg>
-						<span>Resolution: <span class="spec-highlight">800x600</span></span>
+						<span>Resolution: <span class="spec-highlight">1024x768</span></span>
 					</li>
 					<li class="spec-item">
 						<svg class="spec-icon" viewBox="0 0 24 24">
 							<path d="M17 17H7V7H17M21 11V9H19V7C19 5.9 18.1 5 17 5H15V3H13V5H11V3H9V5H7C5.9 5 5 5.9 5 7V9H3V11H5V13H3V15H5V17C5 18.1 5.9 19 7 19H9V21H11V19H13V21H15V19H17C18.1 19 19 18.1 19 17V15H21V13H19V11H21Z" />
 						</svg>
-						<span>Memory: <span class="spec-highlight">256 MB</span></span>
-					</li>
-					<li class="spec-item">
-						<svg class="spec-icon" viewBox="0 0 24 24">
-							<path d="M4 4H20V8H4V4ZM4 10H20V20H4V10ZM6 12V18H18V12H6Z" />
-						</svg>
-						<span>Apps: <span class="spec-highlight">Limited Win32 apps</span></span>
+						<span>Memory: <span class="spec-highlight">1 GB</span></span>
 					</li>
 					<li class="spec-item">
 						<svg class="spec-icon" viewBox="0 0 24 24">
@@ -55,6 +49,8 @@
 						<span>Internet: <span class="spec-highlight">No</span></span>
 					</li>
 				</ul>
+
+				<b>Early experimental test, extremely slow and very buggy!</b>
 			</a>
 
 			<a href="/win8" class="os-card" id="option-win8" data-target-path="/win8" data-os="Windows 8" tabindex="0" role="radio" aria-checked="false">
@@ -82,15 +78,41 @@
 					</li>
 					<li class="spec-item">
 						<svg class="spec-icon" viewBox="0 0 24 24">
-							<path d="M4 4H20V8H4V4ZM4 10H20V20H4V10ZM6 12V18H18V12H6Z" />
+							<path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
 						</svg>
-						<span>Apps: <span class="spec-highlight">Win32+WinRT (most metro apps are broken, WIP)</span></span>
+						<span>Internet: <span class="spec-highlight">Broken</span></span>
+					</li>
+				</ul>
+			</a>
+
+			<a href="/win7" class="os-card" id="option-win7" data-target-path="/win7" data-os="Windows 7" tabindex="0" role="radio" aria-checked="false">
+				<div class="preview-box win7">
+					<img src="/screenshots/win7.png" alt="Windows 7 Preview" class="preview-img" onerror="this.style.display='none';">
+				</div>
+
+				<div class="os-header">
+					<h2 class="os-name">Windows 7</h2>
+					<span class="os-edition">(Thin PC Edition)</span>
+				</div>
+
+				<ul class="specs-list">
+					<li class="spec-item">
+						<svg class="spec-icon" viewBox="0 0 24 24">
+							<path d="M21 3H3C1.9 3 1 3.9 1 5V17C1 18.1 1.9 19 3 19H8V21H16V19H21C22.1 19 23 18.1 23 17V5C23 3.9 22.1 3 21 3ZM21 17H3V5H21V17Z" />
+						</svg>
+						<span>Resolution: <span class="spec-highlight">800x600</span></span>
+					</li>
+					<li class="spec-item">
+						<svg class="spec-icon" viewBox="0 0 24 24">
+							<path d="M17 17H7V7H17M21 11V9H19V7C19 5.9 18.1 5 17 5H15V3H13V5H11V3H9V5H7C5.9 5 5 5.9 5 7V9H3V11H5V13H3V15H5V17C5 18.1 5.9 19 7 19H9V21H11V19H13V21H15V19H17C18.1 19 19 18.1 19 17V15H21V13H19V11H21Z" />
+						</svg>
+						<span>Memory: <span class="spec-highlight">256 MB</span></span>
 					</li>
 					<li class="spec-item">
 						<svg class="spec-icon" viewBox="0 0 24 24">
 							<path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
 						</svg>
-						<span>Internet: <span class="spec-highlight">Yes (experimental)</span></span>
+						<span>Internet: <span class="spec-highlight">No</span></span>
 					</li>
 				</ul>
 			</a>
